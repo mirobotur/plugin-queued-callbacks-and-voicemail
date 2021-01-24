@@ -7,11 +7,11 @@
   },
   "dependencies": {
     "flex-plugin": "4.0.2-beta.0",
+    "moment": "2.24.0",
+    "moment-timezone": "0.5.28",
     "react": "16.5.2",
     "react-dom": "16.5.2",
-    "react-moment": "0.9.7",
-    "moment": "2.24.0",
-    "moment-timezone": "0.5.28"
+    "react-moment": "0.9.7"
   },
   "devDependencies": {
     "@twilio/flex-ui": "^1",

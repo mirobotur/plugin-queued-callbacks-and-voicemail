@@ -1,5 +1,7 @@
 appConfig.js
 .env
+.vscode
+.twilio-functions
 
 # Logs
 logs

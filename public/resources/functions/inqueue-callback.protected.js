@@ -103,8 +103,15 @@ exports.handler = function (context, event, callback) {
   // create the callback task
   async function createCallback(phone, taskInfo) {
     let time = getTime(server_tz);
+    let conversations = {};
+    conversations.conversation_id = getOrigTaskData(
+      taskInfo.originalTaskData,
+      'sid',
+      ''
+    )
 
     const taskAttributes = {
+      conversations: conversations,
       taskType: 'callback',
       ringback: alertTone,
       to: phone,
@@ -242,10 +249,10 @@ exports.handler = function (context, event, callback) {
           temp = event.cbphone;
           twiml.redirect(
             domain +
-              '/inqueue-callback?mode=submitCallback&callsid=' +
-              callSid +
-              '&cbphone=' +
-              temp
+            '/inqueue-callback?mode=submitCallback&callsid=' +
+            callSid +
+            '&cbphone=' +
+            temp
           );
           callback(null, twiml);
           break;
@@ -308,10 +315,10 @@ exports.handler = function (context, event, callback) {
           temp = event.cbphone;
           twiml.redirect(
             domain +
-              '/inqueue-callback?mode=submitCallback&callsid=' +
-              callSid +
-              '&cbphone=' +
-              temp
+            '/inqueue-callback?mode=submitCallback&callsid=' +
+            callSid +
+            '&cbphone=' +
+            temp
           );
           callback(null, twiml);
           break;
@@ -319,9 +326,9 @@ exports.handler = function (context, event, callback) {
         case '2':
           twiml.redirect(
             domain +
-              '/inqueue-callback?mode=mainProcess&callsid=' +
-              callSid +
-              '&Digits=2'
+            '/inqueue-callback?mode=mainProcess&callsid=' +
+            callSid +
+            '&Digits=2'
           );
           callback(null, twiml);
           break;

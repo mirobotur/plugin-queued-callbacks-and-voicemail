@@ -97,8 +97,13 @@ exports.handler = function (context, event, callback) {
   // create the voicemail task
   async function createVoicemail(result, taskInfo) {
     let time = getTime(server_tz);
+    let conversations = {}
+    conversations.conversation_id = getOrigTaskData(taskInfo.originalTaskData, 'sid', '')
+    conversations.segment_link = result.recordingUrl
+    conversations.content = result.transcriptionText
 
     const taskAttributes = {
+      conversations: conversations,
       taskType: 'voicemail',
       ringback: alertTone,
       to: getOrigTaskData(taskInfo.originalTaskData, 'caller', 'getAttribute'), //  incound caller
@@ -209,17 +214,16 @@ exports.handler = function (context, event, callback) {
     case 'pre-process':
       async function main_1() {
         //  get callSid of existing call
-        callSid = event.CallSid;
+        callSid = event.CallSid;//  get taskSid based on callSid
 
-        //  modify the call - redirect it to the Main Voicemail method (mode=main)
-        let modCall = await callModify(callSid);
-
-        //  get taskSid based on callSid
         let taskInfo = await getTask(callSid);
 
         //  cancel (update) the task given taskSid
         let taskSid = getOrigTaskData(taskInfo.originalTaskData, 'sid', '');
         let taskUpdate = await cancelTask(taskSid);
+
+        //  modify the call - redirect it to the Main Voicemail method (mode=main)
+        let modCall = await callModify(callSid);
 
         callback(null, '');
       }
@@ -292,7 +296,7 @@ exports.handler = function (context, event, callback) {
         };
 
         callSid = event.callsid;
-        console.log(callSid);
+        //console.log(callSid);
         let taskInfo = await getTask(callSid);
 
         //  create the Voicemail task
